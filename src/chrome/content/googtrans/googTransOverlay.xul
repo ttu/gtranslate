@@ -29,4 +29,6 @@
 		</menupopup>
 	</menu>
 	
+	<menuitem id="gtranslate_quickresult" label=""/>
+	
 </overlay>

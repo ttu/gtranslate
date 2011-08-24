@@ -41,6 +41,7 @@ Components.utils.import("resource://gtranslate/GoogleTranslate.js");
         elements["gtranslate_langpair_main"] = document.getElementById("gtranslate_langpair_main");
         elements["gtranslate_langpair_popup"] = document.getElementById("gtranslate_langpair_popup");
         elements["gtranslate_dict"] = document.getElementById("gtranslate_dict");
+		elements["gtranslate_quickresult"] = document.getElementById("gtranslate_quickresult");
         elements["gtranslate_langpairs"] = {};
         
         // Events
@@ -67,6 +68,7 @@ Components.utils.import("resource://gtranslate/GoogleTranslate.js");
         
         // Open Google Translate in a new tab
         elements["gtranslate_result"].addEventListener("command", openPage, false);
+		elements["gtranslate_quickresult"].addEventListener("command", openPage, false);
     }
     
     // On right click event
@@ -80,6 +82,9 @@ Components.utils.import("resource://gtranslate/GoogleTranslate.js");
         elements["gtranslate_replace"].setAttribute('hidden', true);
         elements["gtranslate_result"].setAttribute('disabled', true);
         
+		elements["gtranslate_quickresult"].setAttribute('hidden', true);
+		elements["gtranslate_quickresult"].setAttribute('disabled', true);
+		
         curDetectedLang = "";
         
         var popupnode = document.popupNode;
@@ -94,7 +99,11 @@ Components.utils.import("resource://gtranslate/GoogleTranslate.js");
         if (selection != '') {
             showMenu();
             elements["gtranslate_main"].setAttribute('label', translateWord + ' "' + selection.replace(/\s+/g," ") + '"');
-        
+			
+			// If quick translate enabled 
+			if (GoogleTranslate.getShowQuickResult())
+				initTranslate();
+				
         // Hide gTranslate
         } else {
             hideMenu();
@@ -119,6 +128,9 @@ Components.utils.import("resource://gtranslate/GoogleTranslate.js");
             var connectgoogle = elements["gtranslate_strings"].getString("ConnectToGoogle");
             var strConnect = elements["gtranslate_strings"].getString("Connecting");
             
+			elements["gtranslate_quickresult"].setAttribute('label', connectgoogle);
+            elements["gtranslate_quickresult"].setAttribute('tooltiptext', null);
+			
             elements["gtranslate_result"].setAttribute('label', connectgoogle);
             elements["gtranslate_result"].setAttribute('tooltiptext', null);
             
@@ -139,8 +151,11 @@ Components.utils.import("resource://gtranslate/GoogleTranslate.js");
                       errorMsg = elements["gtranslate_strings"].getString("ConnectionError");
                     }
                     
+					elements["gtranslate_quickresult"].setAttribute('label', errorMsg);
+                    elements["gtranslate_quickresult"].setAttribute('tooltiptext', errorMsg);
+					
                     elements["gtranslate_result"].setAttribute('label', errorMsg);
-                    elements["gtranslate_result"].setAttribute('tooltiptext', errorMsg);
+                    elements["gtranslate_result"].setAttribute('tooltiptext', errorMsg);		
                 }
             );
         }
@@ -157,12 +172,19 @@ Components.utils.import("resource://gtranslate/GoogleTranslate.js");
             var noTrans = elements["gtranslate_strings"].getString("NoTranslation");
             elements["gtranslate_result"].setAttribute('label', noTrans + ' "' + selection.replace(/\s+/g," ") + '"');
             elements["gtranslate_result"].setAttribute('tooltiptext', null);
+			
+			elements["gtranslate_quickresult"].setAttribute('label', noTrans + ' "' + selection.replace(/\s+/g," ") + '"');
+            elements["gtranslate_quickresult"].setAttribute('tooltiptext', null);
             
         } else {
             elements["gtranslate_result"].setAttribute('label', curTranslation.replace(/\s+/g," "));
             elements["gtranslate_result"].setAttribute('tooltiptext', curTranslation);
             elements["gtranslate_result"].setAttribute('disabled', false);
             elements["gtranslate_replace"].setAttribute('disabled', false);
+			
+			elements["gtranslate_quickresult"].setAttribute('label', curTranslation.replace(/\s+/g," "));
+            elements["gtranslate_quickresult"].setAttribute('tooltiptext', curTranslation);
+            elements["gtranslate_quickresult"].setAttribute('disabled', false);
         }
         
         selection = '';
@@ -222,12 +244,16 @@ Components.utils.import("resource://gtranslate/GoogleTranslate.js");
     function showMenu() {
         elements["gtranslate_main"].hidden = false;
         elements["gtranslate_separator"].hidden = false;
+		
+		if (GoogleTranslate.getShowQuickResult())
+			elements["gtranslate_quickresult"].hidden = false;
     }
     
     // Hide menu
     function hideMenu() {
         elements["gtranslate_main"].hidden = true;
         elements["gtranslate_separator"].hidden = true;
+		elements["gtranslate_quickresult"].hidden = true;
     }
     
     // Generates langlist menu

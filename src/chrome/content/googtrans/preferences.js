@@ -79,7 +79,10 @@ Components.utils.import("resource://gtranslate/GoogleTranslate.js");
       }, false);
       
       fillToLang();
-      elts.langpair_to.value = GoogleTranslate.prefs.getCharPref("to");
+      elts.langpair_to.value = GoogleTranslate.prefs.getCharPref("to");  
+
+	  var chkbox = UtilChrome.gid('show_quickresult');
+	  chkbox.checked = GoogleTranslate.prefs.getBoolPref("showQuickResult");
   };
   
   

@@ -8,6 +8,7 @@
 		<preferences>
 			<preference id="fromlang" name="googTrans.from" type="string"/>
 			<preference id="tolang" name="googTrans.to" type="string"/>
+			<preference id="showQuick" name="googTrans.showQuickResult" type="bool"/>
 		</preferences>
 		
 		<groupbox>
@@ -23,6 +24,7 @@
 				</menupopup>
 			</menulist>
 		</groupbox>
+		<checkbox id="show_quickresult" label="&show.quickresult.label;" preference="showQuick"/>
 	</prefpane>
 	
 	<stringbundleset id="stringbundleset">

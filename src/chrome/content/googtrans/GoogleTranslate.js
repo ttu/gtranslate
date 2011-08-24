@@ -93,6 +93,9 @@ if ("undefined" === typeof(GoogleTranslate)) {
             if (!prefs.prefHasUserValue("to")) {
                 prefs.setCharPref("to", this.getDefaultTo());
             }
+			if (!prefs.prefHasUserValue("showQuickResult")) {
+				prefs.setBoolPref("showQuickResult", true);
+            }
         },
 
         // log a message to the Error Console
@@ -180,7 +183,11 @@ if ("undefined" === typeof(GoogleTranslate)) {
         // get langpair from preferences
         getLangPair: function() {
             return [this.prefs.getCharPref("from"), this.prefs.getCharPref("to")];
-        }
+        },
+		
+		getShowQuickResult: function(){
+			return this.prefs.getBoolPref("showQuickResult");
+		}
     };
 
     (function() {
